@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Monitoring TDS Real-Time - Kelompok 5 Oseanografi ITB</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80")
+          no-repeat center center fixed;
+        background-size: cover;
+        color: #e0f7fa;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      header {
+        background-color: rgba(0, 38, 66, 0.85);
+        padding: 12px 30px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+        user-select: none;
+      }
+      header img {
+        height: 50px;
+        width: auto;
+      }
+      header h1 {
+        font-weight: 700;
+        font-size: 1.9rem;
+        color: #80deea;
+        margin: 0;
+        flex-grow: 1;
+        text-shadow: 0 0 6px #26c6da;
+      }
+      header p {
+        font-style: italic;
+        font-weight: 500;
+        color: #b2ebf2;
+        margin: 0;
+        font-size: 1rem;
+      }
+      main {
+        flex-grow: 1;
+        background-color: rgba(0, 38, 66, 0.85);
+        margin: 20px auto 40px auto;
+        padding: 40px 50px 50px 50px;
+        max-width: 1200px;
+        width: 98%;
+        box-shadow: 0 0 30px rgba(0, 180, 220, 0.8);
+        border-radius: 20px;
+      }
+      section {
+        margin-bottom: 50px;
+      }
+      h2 {
+        font-weight: 700;
+        color: #4dd0e1;
+        border-bottom: 2px solid #00acc1;
+        padding-bottom: 8px;
+        margin-bottom: 20px;
+        text-shadow: 0 0 8px #26c6da;
+      }
+      #tds-value {
+        font-size: 5rem;
+        margin-bottom: 30px;
+        color: #00e5ff;
+        text-align: center;
+        text-shadow: 0 0 15px #00bcd4;
+      }
+      button#btn-refresh {
+        display: block;
+        margin: 0 auto 40px auto;
+        padding: 14px 36px;
+        font-size: 1.25rem;
+        font-weight: 700;
+        background-color: #00bcd4;
+        border: none;
+        border-radius: 35px;
+        color: #004d40;
+        cursor: pointer;
+        box-shadow: 0 6px 20px rgba(0, 188, 212, 0.6);
+        transition: background-color 0.3s ease;
+        user-select: none;
+      }
+      button#btn-refresh:hover {
+        background-color: #0097a7;
+        color: #e0f2f1;
+      }
+      canvas {
+        display: block;
+        max-width: 100%;
+        margin: 0 auto;
+        border-radius: 16px;
+        box-shadow: 0 0 20px #00bcd4cc;
+        background-color: rgba(0, 0, 0, 0.35);
+        padding: 20px;
+      }
+      p.conclusion-text,
+      p.project-text {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        color: #b2ebf2;
+        text-align: justify;
+        text-shadow: 0 0 3px #00838f;
+      }
+      footer {
+        text-align: center;
+        padding: 15px;
+        font-size: 0.9rem;
+        color: #80deea;
+        user-select: none;
+        background-color: rgba(0, 38, 66, 0.85);
+        box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.15);
+      }
+      @media (max-width: 640px) {
+        header {
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+        }
+        header h1 {
+          font-size: 1.5rem;
+          text-align: center;
+        }
+        button#btn-refresh {
+          width: 100%;
+          font-size: 1rem;
+          padding: 12px 0;
+        }
+        #tds-value {
+          font-size: 3rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img src="images/LOGOITB.png" alt="Logo ITB" />
+      <h1>Monitoring TDS Real-Time</h1>
+      <p>Kelompok 5 - Mata Kuliah Design Oseanografi ITB</p>
+    </header>
+
+    <main>
+      <section id="monitoring">
+        <h2>Data TDS Saat Ini (PSU)</h2>
+        <div id="tds-value">--</div>
+        <button id="btn-refresh" title="Klik untuk mengambil data terbaru">
+          Refresh Data Manual
+        </button>
+        <canvas id="tdsChart" height="250"></canvas>
+      </section>
+
+      <section id="conclusion">
+        <h2>Kesimpulan</h2>
+        <p class="conclusion-text">
+          Monitoring TDS secara real-time ini membantu memantau kadar zat
+          terlarut total di air yang penting untuk kualitas air dan penelitian
+          lingkungan. Sistem ini menyediakan antarmuka mudah dan visualisasi
+          grafik yang intuitif.
+        </p>
+      </section>
+
+      <section id="project">
+        <h2>Proyek dan Implementasi</h2>
+        <p class="project-text">
+          Proyek ini dikembangkan sebagai bagian dari tugas kelompok mata kuliah
+          Design Oseanografi ITB. Data diambil langsung dari sensor TDS yang
+          terhubung dengan ESP32 dan server lokal XAMPP untuk pengolahan dan
+          visualisasi data.
+        </p>
+      </section>
+    </main>
+
+    <footer>&copy; 2025 Kelompok 5 Oseanografi ITB</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      const tdsDisplay = document.getElementById("tds-value");
+      const btnRefresh = document.getElementById("btn-refresh");
+      const ctx = document.getElementById("tdsChart").getContext("2d");
+
+      let labels = [];
+      let dataTDS = [];
+
+      const tdsChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "TDS (PSU)",
+              data: dataTDS,
+              borderColor: "#00e5ff",
+              backgroundColor: "rgba(0, 229, 255, 0.3)",
+              fill: true,
+              tension: 0.25,
+              pointRadius: 5,
+              pointHoverRadius: 8,
+              borderWidth: 3,
+            },
+          ],
+        },
+        options: {
+          animation: false,
+          responsive: true,
+          scales: {
+            y: {
+              min: 0,
+              max: 100,
+              ticks: { stepSize: 100 },
+              title: { display: true, text: "psu" },
+              grid: { color: "rgba(0, 229, 255, 0.2)" },
+            },
+            x: {
+              title: { display: true, text: "Waktu" },
+              grid: { color: "rgba(0, 229, 255, 0.1)" },
+            },
+          },
+          plugins: {
+            legend: {
+              labels: { color: "#b2ebf2", font: { weight: "bold" } },
+            },
+            tooltip: {
+              enabled: true,
+              backgroundColor: "#00838f",
+              titleColor: "#e0f7fa",
+              bodyColor: "#e0f7fa",
+              cornerRadius: 6,
+              displayColors: false,
+            },
+          },
+        },
+      });
+
+      async function fetchTDSData() {
+        try {
+          const response = await fetch("/tds.json");
+          const data = await response.json();
+
+          // Asumsikan JSON response format: { "timestamp": "2025-05-31T10:00:00Z", "tds": 523 }
+          return {
+            timestamp: data.timestamp,
+            tds: data.tds,
+          };
+        } catch (error) {
+          console.error("Gagal mengambil data TDS:", error);
+          return null;
+        }
+      }
+
+      async function updateData() {
+        const data = await fetchTDSData();
+
+        if (!data) {
+          tdsDisplay.textContent = "Error";
+          return;
+        }
+
+        const time = new Date(data.timestamp).toLocaleTimeString();
+        const tdsValue = data.tds;
+
+        tdsDisplay.textContent = `${tdsValue} PSU`;
+
+        if (labels.length >= 5) {
+          labels.shift();
+          dataTDS.shift();
+        }
+        labels.push(time);
+        dataTDS.push(tdsValue);
+
+        tdsChart.update();
+      }
+
+      btnRefresh.addEventListener("click", () => {
+        btnRefresh.disabled = true;
+        btnRefresh.textContent = "Memuat data...";
+        updateData().then(() => {
+          btnRefresh.disabled = false;
+          btnRefresh.textContent = "Refresh Data Manual";
+        });
+      });
+
+      updateData();
+      setInterval(updateData, 5000);
+    </script>
+  </body>
+</html>
